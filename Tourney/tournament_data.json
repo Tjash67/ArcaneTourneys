@@ -1,0 +1,12 @@
+{
+    "tournaments": {},
+    "teams": {},
+    "matches": {},
+    "server_config": {},
+    "payments": {},
+    "leaderboards": {
+        "highest_kill_match": [],
+        "total_kills": {}
+    },
+    "recent_matches": []
+}

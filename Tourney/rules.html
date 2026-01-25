@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Official tournament rules, format, and scoring system. EWC Match Point format with 135 point threshold.">
+    <title>Rules - Arcane Tournaments</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --bg-dark: #000000; --bg-card: #0a0d12; --cyan-glow: #00d9ff; --cyan-bright: #00f0ff; --metal-light: #c5d1dd; --text-primary: #e8f2f7; --text-secondary: #8b9daa; --border-glow: rgba(0, 217, 255, 0.2); --glow-effect: 0 0 20px rgba(0, 217, 255, 0.4); }
+        body { font-family: 'Rajdhani', sans-serif; background: var(--bg-dark); color: var(--text-primary); line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        .tech-grid { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(0, 217, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 217, 255, 0.03) 1px, transparent 1px); background-size: 60px 60px; z-index: 0; pointer-events: none; }
+        .tech-grid::before { content: ''; position: absolute; width: 100%; height: 100%; background: linear-gradient(180deg, transparent, rgba(0, 217, 255, 0.05) 50%, transparent); animation: scanline 8s linear infinite; }
+        @keyframes scanline { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+        .particle { position: absolute; width: 3px; height: 3px; background: var(--cyan-glow); border-radius: 50%; box-shadow: 0 0 10px var(--cyan-glow); opacity: 0; animation: particleRise linear infinite; }
+        @keyframes particleRise { 0% { transform: translateY(100vh); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-100px) translateX(var(--drift)); opacity: 0; } }
+        
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(5, 5, 8, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-glow); box-shadow: 0 4px 30px rgba(0, 217, 255, 0.1); }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Orbitron', sans-serif; font-size: 1.25rem; font-weight: 900; letter-spacing: 2px; color: var(--cyan-bright); text-shadow: 0 0 10px var(--cyan-glow); text-transform: uppercase; z-index: 1001; }
+        .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1001; }
+        .hamburger span { width: 25px; height: 3px; background: var(--cyan-bright); border-radius: 2px; transition: all 0.3s ease; box-shadow: 0 0 10px var(--cyan-glow); }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(8px, 8px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(7px, -7px); }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; transition: all 0.3s ease; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 600; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; position: relative; padding: 0.5rem 0; }
+        .nav-links a::before { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--cyan-glow); box-shadow: var(--glow-effect); transition: width 0.3s ease; }
+        .nav-links a:hover { color: var(--cyan-bright); text-shadow: 0 0 10px var(--cyan-glow); }
+        .nav-links a:hover::before { width: 100%; }
+        
+        main { position: relative; z-index: 10; max-width: 1200px; margin: 0 auto; padding: 6rem 1.5rem 4rem; }
+        .page-header { text-align: center; margin-bottom: 3rem; }
+        .page-title { font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 900; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 3px; color: var(--metal-light); }
+        .page-subtitle { font-size: 1.125rem; color: var(--text-secondary); font-weight: 500; }
+        
+        .section { background: var(--bg-card); border: 1px solid var(--border-glow); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; }
+        .section-title { font-family: 'Orbitron', sans-serif; font-size: clamp(1.25rem, 4vw, 1.75rem); font-weight: 900; margin-bottom: 1.5rem; color: var(--cyan-bright); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 15px var(--cyan-glow); }
+        .section p { font-size: 1.125rem; line-height: 1.8; color: var(--text-secondary); margin-bottom: 1.5rem; }
+        .section ul { list-style: none; margin: 1.5rem 0; }
+        .section li { font-size: 1.125rem; line-height: 1.8; color: var(--text-secondary); margin-bottom: 1rem; padding-left: 2rem; position: relative; }
+        .section li::before { content: '▸'; position: absolute; left: 0; color: var(--cyan-glow); font-weight: 900; }
+        
+        .scoring-table { background: rgba(0, 10, 15, 0.5); border: 1px solid var(--border-glow); border-radius: 12px; overflow: hidden; margin: 2rem 0; }
+        .scoring-header { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 1.25rem 1.5rem; background: rgba(0, 217, 255, 0.05); border-bottom: 1px solid var(--border-glow); }
+        .scoring-header-cell { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--cyan-bright); }
+        .scoring-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 1rem 1.5rem; border-bottom: 1px solid rgba(0, 217, 255, 0.05); }
+        .scoring-row:last-child { border-bottom: none; }
+        .scoring-cell { font-size: 1.125rem; font-weight: 600; color: var(--text-primary); }
+        
+        .highlight-box { background: rgba(0, 217, 255, 0.05); border: 1px solid var(--cyan-glow); border-radius: 12px; padding: 1.5rem; margin: 2rem 0; }
+        .highlight-box strong { color: var(--cyan-bright); text-shadow: 0 0 10px var(--cyan-glow); }
+        
+        .prize-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .prize-card { background: rgba(0, 10, 15, 0.5); border: 1px solid var(--border-glow); border-radius: 12px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; }
+        .prize-card:hover { border-color: var(--cyan-glow); box-shadow: var(--glow-effect); transform: translateY(-5px); }
+        .prize-place { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .prize-label { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); margin-bottom: 0.75rem; }
+        .prize-value { font-family: 'Orbitron', sans-serif; font-size: 1.75rem; font-weight: 900; color: var(--cyan-bright); text-shadow: 0 0 15px var(--cyan-glow); }
+        
+        footer { position: relative; z-index: 10; text-align: center; padding: 3rem 2rem; margin-top: 6rem; border-top: 1px solid var(--border-glow); color: var(--text-secondary); }
+        
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            .nav-links { position: fixed; top: 70px; right: -100%; width: 250px; height: calc(100vh - 70px); background: rgba(10, 13, 18, 0.98); backdrop-filter: blur(20px); flex-direction: column; gap: 0; padding: 2rem 0; border-left: 1px solid var(--border-glow); box-shadow: -4px 0 30px rgba(0, 217, 255, 0.1); }
+            .nav-links.active { right: 0; }
+            .nav-links li { width: 100%; }
+            .nav-links a { display: block; padding: 1.25rem 2rem; border-bottom: 1px solid rgba(0, 217, 255, 0.05); }
+            .nav-links a::before { display: none; }
+            .nav-links a:hover { background: rgba(0, 217, 255, 0.05); }
+            main { padding: 5rem 1rem 3rem; }
+            .section { padding: 1.5rem; }
+            .section p, .section li { font-size: 1rem; }
+            .prize-grid { grid-template-columns: 1fr; }
+        }
+        
+        @media (min-width: 769px) {
+            main { padding: 7rem 2rem 4rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="tech-grid"></div>
+    <div class="particles" id="particles"></div>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">ARCANE TOURNEYS</div>
+            <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="streams.html">Live Streams</a></li>
+                <li><a href="standings.html">Standings</a></li>
+                <li><a href="rules.html">Rules</a></li>
+            </ul>
+        </div>
+    </nav>
+    <main>
+        <div class="page-header">
+            <h1 class="page-title">📋 TOURNAMENT RULES 📋</h1>
+            <p class="page-subtitle">Official competition format and guidelines</p>
+        </div>
+        <section class="section">
+            <h2 class="section-title">⚔️ Tournament Format</h2>
+            <p>Arcane Tournaments uses the <strong>EWC Match Point Format</strong> - the same competitive format used in elite Call of Duty Warzone competitions worldwide.</p>
+            <div class="highlight-box">
+                <p><strong>Match Point Threshold:</strong> 135 Points<br><strong>Victory Condition:</strong> First team to reach 135 points AND win a match becomes champion</p>
+            </div>
+            <p>Teams compete in Warzone Resurgence Trios matches, accumulating points through eliminations and placement bonuses. The tournament continues until a team at Match Point secures a victory.</p>
+        </section>
+        <section class="section">
+            <h2 class="section-title">📊 Scoring System</h2>
+            <p>Points are awarded for both eliminations and final placement in each match:</p>
+            <div class="scoring-table">
+                <div class="scoring-header">
+                    <div class="scoring-header-cell">Metric</div>
+                    <div class="scoring-header-cell">Points</div>
+                </div>
+                <div class="scoring-row"><div class="scoring-cell">Per Elimination</div><div class="scoring-cell">+1 point</div></div>
+                <div class="scoring-row"><div class="scoring-cell">1st Place</div><div class="scoring-cell">+15 points</div></div>
+                <div class="scoring-row"><div class="scoring-cell">2nd Place</div><div class="scoring-cell">+12 points</div></div>
+                <div class="scoring-row"><div class="scoring-cell">3rd Place</div><div class="scoring-cell">+10 points</div></div>
+                <div class="scoring-row"><div class="scoring-cell">4th Place</div><div class="scoring-cell">+8 points</div></div>
+                <div class="scoring-row"><div class="scoring-cell">5th Place</div><div class="scoring-cell">+7 points</div></div>
+                <div class="scoring-row"><div class="scoring-cell">6th-12th Place</div><div class="scoring-cell">+6 to +1 points</div></div>
+            </div>
+        </section>
+        <section class="section">
+            <h2 class="section-title">📝 Registration & Entry</h2>
+            <ul>
+                <li><strong>Entry Fee:</strong> $15 per team (3 players)</li>
+                <li><strong>Team Composition:</strong> Teams must consist of exactly 3 players</li>
+                <li><strong>Registration:</strong> Use Discord bot command <code>/register_team</code></li>
+                <li><strong>Streaming:</strong> Teams can stream on Twitch, YouTube, or Kick</li>
+                <li><strong>Payment:</strong> CashApp, Venmo, or PayPal accepted</li>
+                <li><strong>Deadline:</strong> Registration closes 1 hour before tournament start</li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2 class="section-title">💰 Prize Distribution</h2>
+            <div class="prize-grid">
+                <div class="prize-card">
+                    <div class="prize-place">🥇</div>
+                    <div class="prize-label">First Place</div>
+                    <div class="prize-value">70%</div>
+                </div>
+                <div class="prize-card">
+                    <div class="prize-place">🥈</div>
+                    <div class="prize-label">Second Place</div>
+                    <div class="prize-value">20%</div>
+                </div>
+                <div class="prize-card">
+                    <div class="prize-place">🥉</div>
+                    <div class="prize-label">Third Place</div>
+                    <div class="prize-value">10%</div>
+                </div>
+            </div>
+        </section>
+        <section class="section">
+            <h2 class="section-title">⚖️ Competition Rules</h2>
+            <ul>
+                <li>All players must use their registered Activision IDs</li>
+                <li>Teams submit match results via <code>/submit_match</code> command</li>
+                <li>Screenshot or video proof may be requested for high-kill matches</li>
+                <li>Cheating, hacking, or exploiting will result in immediate disqualification</li>
+                <li>Tournament admins have final say on all disputes</li>
+                <li>Teams must be ready to queue within 5 minutes of match call</li>
+            </ul>
+        </section>
+        <section class="section">
+            <h2 class="section-title">📞 Support & Contact</h2>
+            <p>For questions, disputes, or technical issues, contact tournament admins via Discord. Use the <code>/ask</code> command for quick answers about tournament rules and format.</p>
+            <div class="highlight-box">
+                <p><strong>Good luck, soldiers. May the best squad win.</strong></p>
+            </div>
+        </section>
+    </main>
+    <footer><p>&copy; 2025 Arcane Tournaments. Elite Warzone competition platform.</p></footer>
+    <script>
+        const hamburger=document.getElementById('hamburger');const navLinks=document.getElementById('navLinks');
+        hamburger.addEventListener('click',()=>{hamburger.classList.toggle('active');navLinks.classList.toggle('active');});
+        navLinks.querySelectorAll('a').forEach(link=>{link.addEventListener('click',()=>{hamburger.classList.remove('active');navLinks.classList.remove('active');});});
+        document.addEventListener('click',(e)=>{if(!hamburger.contains(e.target)&&!navLinks.contains(e.target)){hamburger.classList.remove('active');navLinks.classList.remove('active');}});
+        function createParticles(){const c=document.getElementById('particles');for(let i=0;i<30;i++){const p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--drift',(Math.random()*200-100)+'px');p.style.animationDuration=(Math.random()*15+10)+'s';p.style.animationDelay=Math.random()*5+'s';c.appendChild(p);}}
+        window.addEventListener('load',createParticles);
+    </script>
+</body>
+</html>
