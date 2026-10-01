@@ -15,20 +15,20 @@ intents.members = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-# ==================== API KEYS ====================
-# Replace these with your actual keys
-DISCORD_BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE'
-GEMINI_API_KEY = 'YOUR_GEMINI_API_KEY_HERE'
+# ==================== CONFIGURATION ====================
+# Credentials are loaded from the environment. Never commit real values.
+DISCORD_BOT_TOKEN = os.getenv('DISCORD_BOT_TOKEN', '')
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
 
 # GitHub Auto-Sync Configuration (FREE!)
 # 1. Create a GitHub repo for your website files
 # 2. Go to GitHub → Settings → Developer Settings → Personal Access Tokens → Tokens (classic)
 # 3. Generate new token with 'repo' scope
 # 4. Connect your repo to Netlify for auto-deploy
-GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN_HERE'  # Personal access token with 'repo' scope
-GITHUB_REPO = 'YOUR_USERNAME/YOUR_REPO_NAME'  # e.g., 'TJohnson/arcane-tourneys-website'
-GITHUB_BRANCH = 'main'  # or 'master' depending on your repo
-ENABLE_AUTO_SYNC = True  # Set to False to disable auto-sync
+GITHUB_TOKEN = os.getenv('GITHUB_TOKEN', '')
+GITHUB_REPO = os.getenv('GITHUB_REPO', '')
+GITHUB_BRANCH = os.getenv('GITHUB_BRANCH', 'main')
+ENABLE_AUTO_SYNC = os.getenv('ENABLE_AUTO_SYNC', 'false').lower() == 'true'
 
 # Gemini API endpoint
 GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
@@ -1783,8 +1783,8 @@ async def sync_status(interaction: discord.Interaction):
     )
     
     # Check configuration
-    github_token_configured = GITHUB_TOKEN != 'YOUR_GITHUB_TOKEN_HERE'
-    repo_configured = GITHUB_REPO != 'YOUR_USERNAME/YOUR_REPO_NAME'
+    github_token_configured = bool(GITHUB_TOKEN)
+    repo_configured = bool(GITHUB_REPO)
     
     embed.add_field(
         name="GitHub Token",
@@ -1825,4 +1825,6 @@ async def sync_status(interaction: discord.Interaction):
 
 # ==================== RUN THE BOT ====================
 if __name__ == "__main__":
+    if not DISCORD_BOT_TOKEN:
+        raise RuntimeError("DISCORD_BOT_TOKEN is required")
     bot.run(DISCORD_BOT_TOKEN)
